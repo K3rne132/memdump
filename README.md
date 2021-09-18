@@ -4,22 +4,24 @@
 
 ## Definition:
 
-**bool memdump(const void* ptr, size_t bytes);**
+**bool memdump(const void\* ptr, size_t bytes);**
 
-Returns **true** if not error occured.
-**const void* ptr** - pointer to starting address
-**size_t bytes** - number of bytes to read
+* Returns **true** if not error occured.
+* **const void\* ptr** - pointer to starting address
+* **size_t bytes** - number of bytes to read
 
 ## Usage
 
-#### Example
+### Example
 
+```
 int main(void) {
-	memdum((void*)&main, 256);
-	return 0;
+    memdum((void\*)&main, 256);
+    return 0;
 }
+```
 
-#### Additional Information
+### Additional Information
 
 Information except hexdump can be easily modified by changing defined values which are described in header file.
 
