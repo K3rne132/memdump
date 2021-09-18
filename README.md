@@ -16,7 +16,7 @@
 
 ```
 int main(void) {
-    memdum((void\*)&main, 256);
+    memdum((void*)&main, 256);
     return 0;
 }
 ```
