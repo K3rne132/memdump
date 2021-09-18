@@ -2,8 +2,8 @@
 #ifndef MEMDUMP_H
 #define MEMDUMP_H
 
-#include <cstdio>
-#include <cstdlib>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define INFO    true //displays startup information
@@ -19,7 +19,7 @@ bool memdump(const void* ptr, size_t bytes) {
 		else if (sizeof(void*) == 8)
 			printf("Architecture:\t\tx64\n");
 		else
-			printf("Unknown architecture");
+			printf("Unknown architecture\n");
 		printf("Virtual Start Address: \t0x%p\nBytes to read: \t\t%zu\n\n", ptr, bytes);
 	}
 
