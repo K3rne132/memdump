@@ -15,6 +15,8 @@
 ### Example
 
 ```
+#include "memdump.h"
+
 int main(void) {
     memdum((void*)&main, 256);
     return 0;
@@ -27,4 +29,4 @@ Information except hexdump can be easily modified by changing defined values whi
 
 ## Issues
 
-Function does not check whether the pointed memory address is valid - this may raise an exception.
+Function does not check whether the pointed memory address is valid - this may throw an exception.
