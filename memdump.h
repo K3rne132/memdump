@@ -2,8 +2,8 @@
 #ifndef MEMDUMP_H
 #define MEMDUMP_H
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <string.h>
 
 #define INFO    true //displays startup information
@@ -36,7 +36,7 @@ bool memdump(const void* ptr, size_t bytes) {
 
 		printf("%02X ", dump[i]);
 
-		if (i % COLSIZE == 15) {
+		if (i % COLSIZE == COLSIZE - 1) {
 			if (ASCII == true) {
 				printf("\t");
 				for (size_t j = i - COLSIZE + 1; j <= i; j++) {
@@ -50,6 +50,21 @@ bool memdump(const void* ptr, size_t bytes) {
 		}
 
 	}
+	
+	if (ASCII == true) {
+		const unsigned int rest = bytes % COLSIZE;
+		for (unsigned int i = 0; i < COLSIZE - rest; i++) {
+			printf("   ");
+		}
+		printf("\t");
+		for (size_t i = bytes - rest; i < bytes; i++) {
+			if (dump[i] == '\n' || dump[i] == '\r' || dump[i] == '\t')
+				printf(" ");
+			else
+				printf("%c ", dump[i]);
+		}
+	}
+	puts("\n");
 
 	free(dump);
 	return true;
