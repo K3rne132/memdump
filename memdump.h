@@ -2,17 +2,17 @@
 #ifndef MEMDUMP_H
 #define MEMDUMP_H
 
-#include <cstdio>
-#include <cstdlib>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#define INFO    true //displays startup information
-#define ADDRESS true //displays the starting address of the hex dump on the left
-#define COLSIZE 16   //number of columns
-#define ASCII   true //displays ascii characters on the right of the hex dump
+#define INFO    1  // displays startup information
+#define ADDRESS 1  // displays the starting address of the hex dump on the left
+#define COLSIZE 16 // number of columns
+#define ASCII   1  // displays ascii characters on the right of the hex dump
 
-bool memdump(const void* ptr, size_t bytes) {
-	if (INFO == true) {
+int memdump(const void* ptr, size_t bytes) {
+	if (INFO) {
 		printf("MEMORY DUMP\n");
 		if (sizeof(void*) == 4)
 			printf("Architecture:\t\tx86\n");
@@ -26,48 +26,56 @@ bool memdump(const void* ptr, size_t bytes) {
 	/*copy n bytes from ptr to dump*/
 	unsigned char* dump = (unsigned char*)calloc(bytes, sizeof(char));
 	if (dump == NULL)
-		return false;
+		return 0;
 	memcpy(dump, ptr, bytes);
 
 	for (size_t i = 0; i < bytes; i++) {
-
-		if (ADDRESS == true && i % COLSIZE == 0)
+		if (ADDRESS && i % COLSIZE == 0)
 			printf("0x%p\t", (char*)ptr + i);
 
 		printf("%02X ", dump[i]);
 
 		if (i % COLSIZE == COLSIZE - 1) {
-			if (ASCII == true) {
+			if (ASCII) {
 				printf("\t");
 				for (size_t j = i - COLSIZE + 1; j <= i; j++) {
-					if (dump[j] == '\n' || dump[j] == '\r' || dump[j] == '\t')
-						printf(" ");
+					if (dump[j] >= 0x20 && dump[j] < 0x7F)
+						printf("%c", dump[j]);
 					else
-						printf("%c ", dump[j]);
+						printf(".");
 				}
 			}
 			puts("");
 		}
-
 	}
 	
-	if (ASCII == true) {
+	if (ASCII) {
 		const unsigned int rest = bytes % COLSIZE;
 		for (unsigned int i = 0; i < COLSIZE - rest; i++) {
 			printf("   ");
 		}
 		printf("\t");
 		for (size_t i = bytes - rest; i < bytes; i++) {
-			if (dump[i] == '\n' || dump[i] == '\r' || dump[i] == '\t')
-				printf(" ");
+			if (dump[i] >= 0x20 && dump[i] < 0x7F)
+				printf("%c", dump[i]);
 			else
-				printf("%c ", dump[i]);
+				printf(".");
 		}
 	}
 	puts("\n");
 
 	free(dump);
-	return true;
+	return 1;
+}
+
+int dump_to_file(const char* filename, const void* ptr, size_t bytes) {
+	FILE* file = fopen(filename, "wb");
+	if (file == NULL)
+		return 0;
+	if (fwrite(ptr, sizeof(char), bytes, file) != bytes)
+		return 0;
+	fclose(file);
+	return 1;
 }
 
 #endif
